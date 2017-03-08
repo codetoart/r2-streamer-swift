@@ -459,7 +459,9 @@ open class EpubParser {
                 let link = Link()
                 link.href = item.attributes["href"]
                 link.typeLink = item.attributes["media-type"]
-                
+                link.id = item.attributes["id"]
+                link.mediaOverlay = item.attributes["media-overlay"]
+                link.fullhref = (doc.root as NSString).appendingPathComponent(link.href).removingPercentEncoding
                 // Look for properties
                 if let propAttr = item.attributes["properties"] {
                     let props = propAttr.components(separatedBy: CharacterSet.whitespaces)

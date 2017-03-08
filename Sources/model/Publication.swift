@@ -216,6 +216,9 @@ open class Contributor: Mappable {
 
 open class Link: Mappable {
     
+    public var id: String?
+    public var fullhref: String?
+    public var mediaOverlay: String?
     public var href: String?
     public var typeLink: String?
     public var rel: [String] = [String]()
