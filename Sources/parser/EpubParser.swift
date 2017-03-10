@@ -91,8 +91,7 @@ open class EpubParser {
         `EpubParserError.missingFile`
      
     */
-    open func parse(bookname: String) throws -> Publication? {
-        bookName = bookname
+    open func parse() throws -> Publication? {
         if isMimeTypeValid() {
             try parseContainer()
             publication = try parseOPF(rootFile!)
@@ -194,19 +193,9 @@ open class EpubParser {
         publication = Publication()
         publication!.internalData["type"] = "epub"
         publication!.internalData["rootfile"] = rootFile
-        publication!.internalData["version"] = epubVersion
+        publication!.internalData["version"] = "\(epubVersion)"
         if let id = doc.root.attributes["pub-identifier"] {
             publication!.internalData["pub-identifier"] = id
-        }
-        
-        publication?.bookBasePath = kApplicationDocumentsDirectory
-        if let name = bookName {
-            publication?.bookBasePath = (publication?.bookBasePath as NSString).appendingPathComponent(name)
-        }
-        if let bookBasePath = publication?.bookBasePath {
-            publication?.resourcesBasePath = (bookBasePath as NSString).appendingPathComponent(
-                (rootFile as NSString).deletingLastPathComponent
-            )
         }
         
         // Add self to links
@@ -218,6 +207,8 @@ open class EpubParser {
         
         // Get the main title
         metadata.title = parseMainTitle(doc)
+        
+        bookName = metadata.title
         
         // Get the publication unique identifier
         metadata.identifier = parseUniqueIdentifier(doc)
@@ -291,6 +282,16 @@ open class EpubParser {
         // Get the page progression direction
         if let dir = doc.root["spine"].attributes["page-progression-direction"] {
             metadata.direction = dir
+        }
+        
+        publication?.bookBasePath = kApplicationDocumentsDirectory
+        if let name = bookName, let path = publication?.bookBasePath {
+            publication?.bookBasePath = (path as NSString).appendingPathComponent(name)
+        }
+        if let bookBasePath = publication?.bookBasePath, let file = rootFile {
+            publication?.resourcesBasePath = (bookBasePath as NSString).appendingPathComponent(
+                (file as NSString).deletingLastPathComponent
+            )
         }
         
         publication!.metadata = metadata
