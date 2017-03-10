@@ -9,6 +9,7 @@
 import Foundation
 import ObjectMapper
 
+internal let kApplicationDocumentsDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
 
 /**
  The representation of EPUB publication, with its metadata, its spine and other resources.
@@ -37,6 +38,8 @@ open class Publication: Mappable {
     public var LOA: [Link] = [Link]()
     public var LOV: [Link] = [Link]()
     public var LOT: [Link] = [Link]()
+    public var bookBasePath: String?
+    public var resourcesBasePath: String?
     
     public var internalData: [String: String] = [String: String]()
 
@@ -250,6 +253,10 @@ open class Link: Mappable {
         duration <- map["duration"]
         title <- map["title"]
         properties <- map["properties"]
+        id <- map["id"]
+        mediaOverlay <- map["media-overlay"]
+        title <- map[""]
+        
     }
 }
 

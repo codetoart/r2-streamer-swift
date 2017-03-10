@@ -9,7 +9,6 @@
 import Foundation
 import AEXML
 
-
 /**
  
  Errors thrown during the parsing of the EPUB
@@ -61,6 +60,9 @@ open class EpubParser {
     /// The EPUB specification version to which the publication conforms.
     var epubVersion: Int?
     
+    ///The bookname
+    var bookName: String?
+    
     // TODO: multiple renditions
     // TODO: media overlays
     // TODO: TOC, LOI, etc.
@@ -89,7 +91,8 @@ open class EpubParser {
         `EpubParserError.missingFile`
      
     */
-    open func parse() throws -> Publication? {
+    open func parse(bookname: String) throws -> Publication? {
+        bookName = bookname
         if isMimeTypeValid() {
             try parseContainer()
             publication = try parseOPF(rootFile!)
@@ -191,6 +194,20 @@ open class EpubParser {
         publication = Publication()
         publication!.internalData["type"] = "epub"
         publication!.internalData["rootfile"] = rootFile
+        publication!.internalData["version"] = epubVersion
+        if let id = doc.root.attributes["pub-identifier"] {
+            publication!.internalData["pub-identifier"] = id
+        }
+        
+        publication?.bookBasePath = kApplicationDocumentsDirectory
+        if let name = bookName {
+            publication?.bookBasePath = (publication?.bookBasePath as NSString).appendingPathComponent(name)
+        }
+        if let bookBasePath = publication?.bookBasePath {
+            publication?.resourcesBasePath = (bookBasePath as NSString).appendingPathComponent(
+                (rootFile as NSString).deletingLastPathComponent
+            )
+        }
         
         // Add self to links
         // MARK: we don't know the self URL here
@@ -461,7 +478,7 @@ open class EpubParser {
                 link.typeLink = item.attributes["media-type"]
                 link.id = item.attributes["id"]
                 link.mediaOverlay = item.attributes["media-overlay"]
-                if let ref = link.href, let rootfile = rootFile {
+                if let ref = link.href, let rootfile = publication.resourcesBasePath {
                     link.fullhref = (rootfile as NSString).appendingPathComponent(ref).removingPercentEncoding
                 }
                 // Look for properties
