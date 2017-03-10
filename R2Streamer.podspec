@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
  s.name             = "R2Streamer"
- s.version          = "0.1.1"
+ s.version          = "0.1.2"
  s.summary          = "A swift port of r2-streamer library."
  s.description  = <<-DESC
                   Written in Swift.

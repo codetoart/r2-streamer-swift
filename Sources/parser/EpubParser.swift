@@ -186,7 +186,7 @@ open class EpubParser {
         // Get EPUB version from <package> element if it was not set from container
         if epubVersion == nil {
             if let v = doc.root.attributes["version"] {
-                epubVersion = Int(v)
+                epubVersion = Double(v)
             }
         }
         
@@ -194,7 +194,7 @@ open class EpubParser {
         publication!.internalData["type"] = "epub"
         publication!.internalData["rootfile"] = rootFile
         publication!.internalData["version"] = "\(epubVersion)"
-        if let id = doc.root.attributes["pub-identifier"] {
+        if let id = doc.root.attributes["unique-identifier"] {
             publication!.internalData["pub-identifier"] = id
         }
         
