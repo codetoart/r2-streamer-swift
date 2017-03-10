@@ -193,7 +193,9 @@ open class EpubParser {
         publication = Publication()
         publication!.internalData["type"] = "epub"
         publication!.internalData["rootfile"] = rootFile
-        publication!.internalData["version"] = "\(epubVersion)"
+        if let version = epubVersion {
+            publication!.internalData["version"] = String(version)
+        }
         if let id = doc.root.attributes["unique-identifier"] {
             publication!.internalData["pub-identifier"] = id
         }
