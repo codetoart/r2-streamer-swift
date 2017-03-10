@@ -58,7 +58,7 @@ open class EpubParser {
     var publication: Publication?
     
     /// The EPUB specification version to which the publication conforms.
-    var epubVersion: Double?
+    var epubVersion: String?
     
     ///The bookname
     var bookName: String?
@@ -150,10 +150,7 @@ open class EpubParser {
         }
         
         // Get the specifications version the EPUB conforms to
-        if let v = rootFileElement.attributes["version"] {
-            epubVersion = Double(v)
-        }
-        
+        epubVersion = rootFileElement.attributes["version"]
     }
 
     /** 
@@ -184,17 +181,13 @@ open class EpubParser {
         }
         
         // Get EPUB version from <package> element if it was not set from container
-        if epubVersion == nil {
-            if let v = doc.root.attributes["version"] {
-                epubVersion = Double(v)
-            }
-        }
+        epubVersion = doc.root.attributes["version"]
         
         publication = Publication()
         publication!.internalData["type"] = "epub"
         publication!.internalData["rootfile"] = rootFile
         if let version = epubVersion {
-            publication!.internalData["version"] = String(version)
+            publication!.internalData["version"] = version
         }
         if let id = doc.root.attributes["unique-identifier"] {
             publication!.internalData["pub-identifier"] = id
@@ -325,7 +318,7 @@ open class EpubParser {
         }
         
         // If there's more than one, look for the `main` one as defined by `refines`
-        if titles.count > 1 && epubVersion == 3 {
+        if titles.count > 1 && epubVersion == "3.0" {
             let mainTitles = titles.filter { (element: AEXMLElement) in
                 guard let eid = element.attributes["id"] else {
                     return false
@@ -399,7 +392,7 @@ open class EpubParser {
         
         // Look up for possible meta refines for role
         let eid = element.attributes["id"]
-        if eid != nil && epubVersion == 3 {
+        if eid != nil && epubVersion == "3.0" {
             if let metas = doc.root["metadata"]["meta"].all(withAttributes: ["property": "role", "refines": "#" + eid!]) {
                 if metas.count > 0 {
                     let role = metas.first!.string

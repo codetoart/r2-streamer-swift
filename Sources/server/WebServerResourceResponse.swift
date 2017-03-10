@@ -6,7 +6,7 @@
 //  Copyright © 2017 Readium. All rights reserved.
 //
 
-import GCDWebServer
+import GCDWebServers
 
 
 public enum WebServerResponseError: Error {
