@@ -151,7 +151,7 @@ open class EpubParser {
         
         // Get the specifications version the EPUB conforms to
         if let v = rootFileElement.attributes["version"] {
-            epubVersion = Int(v)
+            epubVersion = Double(v)
         }
         
     }
