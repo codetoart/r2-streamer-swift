@@ -58,7 +58,7 @@ open class EpubParser {
     var publication: Publication?
     
     /// The EPUB specification version to which the publication conforms.
-    var epubVersion: Int?
+    var epubVersion: Double?
     
     ///The bookname
     var bookName: String?
