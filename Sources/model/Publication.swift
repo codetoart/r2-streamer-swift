@@ -38,8 +38,6 @@ open class Publication: Mappable {
     public var LOA: [Link] = [Link]()
     public var LOV: [Link] = [Link]()
     public var LOT: [Link] = [Link]()
-    public var bookBasePath: String?
-    public var resourcesBasePath: String?
     
     public var internalData: [String: String] = [String: String]()
 
@@ -220,7 +218,6 @@ open class Contributor: Mappable {
 open class Link: Mappable {
     
     public var id: String?
-    public var fullhref: String?
     public var mediaOverlay: String?
     public var href: String?
     public var typeLink: String?

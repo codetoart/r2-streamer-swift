@@ -279,16 +279,6 @@ open class EpubParser {
             metadata.direction = dir
         }
         
-        publication?.bookBasePath = kApplicationDocumentsDirectory
-        if let name = bookName, let path = publication?.bookBasePath {
-            publication?.bookBasePath = (path as NSString).appendingPathComponent(name)
-        }
-        if let bookBasePath = publication?.bookBasePath, let file = rootFile {
-            publication?.resourcesBasePath = (bookBasePath as NSString).appendingPathComponent(
-                (file as NSString).deletingLastPathComponent
-            )
-        }
-        
         publication!.metadata = metadata
         
         // Look for the manifest item id of the cover
@@ -474,9 +464,6 @@ open class EpubParser {
                 link.typeLink = item.attributes["media-type"]
                 link.id = item.attributes["id"]
                 link.mediaOverlay = item.attributes["media-overlay"]
-                if let ref = link.href, let rootfile = publication.resourcesBasePath {
-                    link.fullhref = (rootfile as NSString).appendingPathComponent(ref).removingPercentEncoding
-                }
                 // Look for properties
                 if let propAttr = item.attributes["properties"] {
                     let props = propAttr.components(separatedBy: CharacterSet.whitespaces)
